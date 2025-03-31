@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.zodiac.data.Horoscope
 
-class HoroscopeAdapter(val items:List<Horoscope>, val onItemClick: (Int) -> Unit) : Adapter<HoroscopeViewHolder>() {
+class HoroscopeAdapter(var items:List<Horoscope>, val onItemClick: (Int) -> Unit) : Adapter<HoroscopeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HoroscopeViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_horoscope, parent, false)
@@ -27,6 +27,11 @@ class HoroscopeAdapter(val items:List<Horoscope>, val onItemClick: (Int) -> Unit
             //Navegar al detalle
             onItemClick(position)
         }
+    }
+
+    fun updateItems(items : List<Horoscope>){
+        this.items = items
+        notifyDataSetChanged()
     }
 
 }
