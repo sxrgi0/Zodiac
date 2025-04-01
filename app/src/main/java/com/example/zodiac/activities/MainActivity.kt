@@ -37,6 +37,10 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
         adapter = HoroscopeAdapter(horoscopeList, { position ->
             val horoscope = horoscopeList[position]
 
