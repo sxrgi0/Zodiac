@@ -28,6 +28,13 @@
         android:layout_height="wrap_content"
         tools:text="Dates"/>
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_marginTop="8dp"
+        android:id="@+id/navigationBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/activity_detail_navigation"/>
+
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progressBar"
         android:layout_width="match_parent"
@@ -48,5 +55,7 @@
             tools:text="Lorem Ipsum"/>
 
     </ScrollView>
+
+
 
 </LinearLayout>

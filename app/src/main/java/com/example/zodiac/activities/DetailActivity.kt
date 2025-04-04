@@ -17,6 +17,7 @@ import com.example.zodiac.R
 import com.example.zodiac.data.Horoscope
 import com.example.zodiac.data.HoroscopeProvider
 import com.example.zodiac.utils.SessionManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,6 +36,8 @@ class DetailActivity : AppCompatActivity() {
     lateinit var iconImageView: ImageView
     lateinit var horoscopeLuckTextView: TextView
     lateinit var progressBar: ProgressBar
+
+    lateinit var navigationBar: BottomNavigationView
 
     lateinit var session: SessionManager
 
@@ -59,6 +62,7 @@ class DetailActivity : AppCompatActivity() {
         iconImageView = findViewById(R.id.iconImageView)
         horoscopeLuckTextView = findViewById(R.id.horoscopeLuckTextView)
         progressBar = findViewById(R.id.progressBar)
+        navigationBar = findViewById(R.id.navigationBar)
 
         session = SessionManager(this)
 
@@ -68,12 +72,28 @@ class DetailActivity : AppCompatActivity() {
 
         isFavorite = session.getFavoriteHoroscope() == horoscope.id
 
+        supportActionBar?.setTitle(horoscope.name)
+        supportActionBar?.setSubtitle(horoscope.dates)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        navigationBar.setOnItemSelectedListener {
+            val period = when (it.itemId) {
+                R.id.menu_daily -> "daily"
+                R.id.menu_weekly -> "weekly"
+                R.id.menu_monthly -> "monthly"
+                else -> "daily"
+            }
+
+            getHoroscopeLuck(period)
+            true
+        }
+
+
 
         nameTextView.setText(horoscope.name)
         dateTextView.setText(horoscope.dates)
         iconImageView.setImageResource(horoscope.icon)
 
-        getHoroscopeLuck()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -87,6 +107,10 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
             R.id.menu_favorite -> {
                 if(isFavorite){
                     session.setFavoriteHoroscope("")
@@ -126,11 +150,11 @@ class DetailActivity : AppCompatActivity() {
     }
 
 
-    fun getHoroscopeLuck(){
+    fun getHoroscopeLuck(period: String = "daily"){
         progressBar.visibility = View.VISIBLE
 
         CoroutineScope(Dispatchers.IO).launch {
-            val url = URL ("https://horoscope-app-api.vercel.app/api/v1/get-horoscope/daily?sign=${horoscope.id}")
+            val url = URL ("https://horoscope-app-api.vercel.app/api/v1/get-horoscope/${period}?sign=${horoscope.id}")
 
             val urlConnection = url.openConnection() as HttpsURLConnection
 
